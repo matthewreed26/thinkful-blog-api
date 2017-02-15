@@ -4,6 +4,15 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const {BlogPosts} = require('./models');
 
+// we're going to add some sample blog posts to BlogPosts
+// so there's some data to look at
+BlogPosts.create(
+      'my sample post title',
+      'some sample content',
+      'sample author',
+      '02/15/17');
+
+
 router.get('/', (req, res) => {
   res.json(BlogPosts.get());
 });
@@ -48,7 +57,7 @@ router.put('/:id', jsonParser, (req, res) => {
     author: req.body.author,
     publishDate: req.body.publishDate
   });
-  res.status(204).json(updatedItem);
+  res.json(updatedItem);
 });
 
 router.delete('/:id', (req, res) => {
