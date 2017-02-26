@@ -25,13 +25,13 @@ describe('Blog Posts', function() {
 
   it('should list blog posts on GET', function() {
     return chai.request(app)
-      .get('/blogPosts')
+      .get('/posts')
       .then(function(res) {
         res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('array');
         res.body.length.should.be.at.least(1);
-        const expectedKeys = ['title', 'content', 'author', 'publishDate'];
+        const expectedKeys = ['title', 'content', 'author', 'created'];
         res.body.forEach(function(item) {
           item.should.be.a('object');
           item.should.include.keys(expectedKeys);
@@ -43,17 +43,17 @@ describe('Blog Posts', function() {
     const newItem = {
       title: 'my fun post title',
       content: 'some fun content',
-      author: 'fun dowder',
-      publishDate: '02/15/17'
+      author: {firstName:'fun', lastName:'dowder'},
+      created: '02/15/17'
     };
     return chai.request(app)
-      .post('/blogPosts')
+      .post('/posts')
       .send(newItem)
       .then(function(res) {
         res.should.have.status(201);
         res.should.be.json;
         res.body.should.be.a('object');
-        res.body.should.include.keys('id', 'title', 'content', 'author', 'publishDate');
+        res.body.should.include.keys('id', 'title', 'content', 'author', 'created');
         res.body.id.should.not.be.null;
         res.body.should.deep.equal(Object.assign(newItem, {id: res.body.id}));
       });
@@ -63,16 +63,16 @@ describe('Blog Posts', function() {
     const updateData = {
       title: 'milkshake',
       content: '200 tbsp cocoa',
-      author: 'coffee mcmilkshake',
-      publishDate: '02/15/17'
+      author: {firstName:'coffee', lastName:'mcmilkshake'},
+      created: '02/15/17'
     };
 
     return chai.request(app)
-      .get('/blogPosts')
+      .get('/posts')
       .then(function(res) {
         updateData.id = res.body[0].id;
         return chai.request(app)
-          .put(`/blogPosts/${updateData.id}`)
+          .put(`/posts/${updateData.id}`)
           .send(updateData);
       })
       .then(function(res) {
@@ -85,10 +85,10 @@ describe('Blog Posts', function() {
 
   it('should delete a blog post on DELETE', function() {
     return chai.request(app)
-      .get('/blogPosts')
+      .get('/posts')
       .then(function(res) {
         return chai.request(app)
-          .delete(`/blogPosts/${res.body[0].id}`);
+          .delete(`/posts/${res.body[0].id}`);
       })
       .then(function(res) {
         res.should.have.status(204);
