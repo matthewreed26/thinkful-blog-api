@@ -16,9 +16,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  Post.findById(req.params.id).exec().then(posts =>{
-    res.json(post => post.apiRepr());
-  }).catch(err => {
+  Post.findById(req.params.id).exec().then(post =>
+    res.json(post.apiRepr())
+  ).catch(err => {
     console.error(err);
     res.status(500).json({message: 'Internal server error'});
   });

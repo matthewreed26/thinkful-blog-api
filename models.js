@@ -7,11 +7,11 @@ const postSchema = mongoose.Schema({
     firstName: {type: String, required: true},
     lastName: {type: String, required: true}
   },
-  created: {type: String, required: true}
+  created: {type: String}
 });
 
 postSchema.virtual('authorString').get(function() {
-  return `${this.author.firstName} ${this.author.lastName}`.trim()
+  return `${this.author.firstName} ${this.author.lastName}`.trim();
 });
 
 postSchema.methods.apiRepr = function() {
