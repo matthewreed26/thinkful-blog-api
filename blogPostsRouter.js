@@ -82,17 +82,19 @@ router.put('/:id', jsonParser, (req, res) => {
     content: req.body.content,
     author: req.body.author,
     created: req.body.created
-  }}).exec().then(
-    post => res.status(204).json(post)
-  ).catch(err => {
+  }}).exec().then(post => {
+    console.log(`Updated blog post \`${post.id}\``);
+    res.status(204).json(post.apiRepr());
+  }).catch(err => {
     console.error(err);
     res.status(500).json({message: 'Internal server error'});
   });
 });
 
 router.delete('/:id', (req, res) => {
-  Post.findByIdAndUpdate(req.params.id).exec().then(post => {
-    console.log(`Deleted blog post \`${req.params.ID}\``);
+  console.log(`Deleting blog post \`${req.params.id}\``);
+  Post.findByIdAndRemove(req.params.id).exec().then(post => {
+    console.log(`Deleted blog post \`${post.id}\``);
     res.status(204).end();
   }).catch(err => {
     console.error(err);
