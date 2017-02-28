@@ -1,7 +1,9 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
+const {Post} = require('../models');
 const {app, runServer, closeServer} = require('../server');
+const {TEST_DATABASE_URL} = require('../config');
 
 // this lets us use *should* style syntax in our tests
 // so we can do things like `(1 + 1).should.equal(2);`
@@ -13,10 +15,43 @@ const should = chai.should();
 // see: https://github.com/chaijs/chai-http
 chai.use(chaiHttp);
 
+function seedPostData() {
+  console.info('seeding post data');
+  const seedData = [];
+
+  for (let i=1; i<=10; i++) {
+    seedData.push(generatePostData());
+  }
+  // this will return a promise
+  return Post.insertMany(seedData);
+}
+
+function generatePostData() {
+  return {
+    title: faker.lorem.words,
+    content: faker.lorem.sentences,
+    author: {firstName:faker.name.firstName(), lastName:faker.name.lastName()},
+    created: faker.date.recent
+  }
+}
+
+function tearDownDb() {
+    console.warn('Deleting database');
+    return mongoose.connection.dropDatabase();
+}
+
 describe('Blog Posts', function() {
 
   before(function() {
-    return runServer();
+    return runServer(TEST_DATABASE_URL);
+  });
+
+  beforeEach(function() {
+    return seedPostData();
+  });
+
+  afterEach(function() {
+    return tearDownDb();
   });
 
   after(function() {
