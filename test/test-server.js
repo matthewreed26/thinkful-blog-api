@@ -31,10 +31,10 @@ function seedPostData() {
 
 function generatePostData() {
   return {
-    title: faker.lorem.words,
-    content: faker.lorem.sentences,
+    title: faker.lorem.words(),
+    content: faker.lorem.sentences(),
     author: {firstName:faker.name.firstName(), lastName:faker.name.lastName()},
-    created: faker.date.recent
+    created: faker.date.recent()
   }
 }
 
