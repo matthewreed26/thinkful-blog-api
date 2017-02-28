@@ -40,46 +40,58 @@ describe('Blog Posts', function() {
   });
 
   it('should add a blog post on POST', function() {
-    const newItem = {
+    const newItemToSend = {
       title: 'my fun post title',
       content: 'some fun content',
       author: {firstName:'fun', lastName:'dowder'},
       created: '02/15/17'
     };
+    const newItemToEqual = {
+      title: 'my fun post title',
+      content: 'some fun content',
+      author: 'fun dowder',
+      created: '02/15/17'
+    };
     return chai.request(app)
       .post('/posts')
-      .send(newItem)
+      .send(newItemToSend)
       .then(function(res) {
         res.should.have.status(201);
         res.should.be.json;
         res.body.should.be.a('object');
         res.body.should.include.keys('id', 'title', 'content', 'author', 'created');
         res.body.id.should.not.be.null;
-        res.body.should.deep.equal(Object.assign(newItem, {id: res.body.id}));
+        res.body.should.deep.equal(Object.assign(newItemToEqual, {id: res.body.id}));
       });
   });
 
   it('should update a blog post on PUT', function() {
-    const updateData = {
+    const updateDataToSend = {
       title: 'milkshake',
       content: '200 tbsp cocoa',
       author: {firstName:'coffee', lastName:'mcmilkshake'},
+      created: '02/15/17'
+    };
+    const updateDataToEqual = {
+      title: 'milkshake',
+      content: '200 tbsp cocoa',
+      author: 'coffee mcmilkshake',
       created: '02/15/17'
     };
 
     return chai.request(app)
       .get('/posts')
       .then(function(res) {
-        updateData.id = res.body[0].id;
+        updateDataToSend.id = res.body[0].id;
         return chai.request(app)
-          .put(`/posts/${updateData.id}`)
-          .send(updateData);
+          .put(`/posts/${updateDataToSend.id}`)
+          .send(updateDataToSend);
       })
       .then(function(res) {
         res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('object');
-        res.body.should.deep.equal(updateData);
+        res.body.should.deep.equal(updateDataToEqual);
       });
   });
 

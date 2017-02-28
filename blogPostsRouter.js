@@ -5,11 +5,9 @@ const jsonParser = bodyParser.json();
 const {Post} = require('./models');
 
 router.get('/', (req, res) => {
-  Post.find().exec().then(posts =>{
-    res.json({
-      posts: posts.map((post) => post.apiRepr())
-    });
-  }).catch(err => {
+  Post.find().exec().then(posts =>
+    res.json(posts.map(post => post.apiRepr()))
+  ).catch(err => {
     console.error(err);
     res.status(500).json({message: 'Internal server error'});
   });
