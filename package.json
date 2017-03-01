@@ -4,7 +4,7 @@
   "description": "Blog API exercise for Lesson 4",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js --harmony",
     "test": "mocha"
   },
   "keywords": [],
