@@ -82,7 +82,7 @@ router.put('/:id', jsonParser, (req, res) => {
     created: req.body.created
   }}).exec().then(post => {
     console.log(`Updated blog post \`${post.id}\``);
-    res.status(204).json(post.apiRepr());
+    res.status(201).json(post.apiRepr());
   }).catch(err => {
     console.error(err);
     res.status(500).json({message: 'Internal server error'});
